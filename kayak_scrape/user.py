@@ -1,5 +1,6 @@
 from backend_scrape import *
 
+#correct spellings for each month
 correct_spellings = ["January","February","March","April","May","June","July","August","September","October","November","December"]
 
 
@@ -23,7 +24,7 @@ def main():
         departure = input("Where are you departing from: ").title().strip()
         destination = input("Where is your destination: ").title().strip()
         dept_month =  input("What month would you like to depart: ").title()
-        if dept_month not in correct_spellings:
+        if dept_month not in correct_spellings: 
             print("Please spell month correctly")
             continue
         else:
@@ -34,21 +35,22 @@ def main():
             
             break
     
-    dept_range_of_days = months_days[dept_month]
+    dept_range_of_days = months_days[dept_month] 
     ret_range_of_days = months_days[ret_month]
     while True:
         try:
             dept_day = int(input("What day would you like to depart: "))
             ret_day = int(input("What day would you like to return: "))
             
-            if dept_day not in range(1,dept_range_of_days+1):
+            #checking if the user-specified date is not beyond the number of days in that month
+            if dept_day not in range(1,dept_range_of_days+1): 
                 print(f"That day does not exist in {dept_month}")
                 continue
             if ret_day not in range(1,ret_range_of_days+1):
                 print(f"That day does not exist in {dept_month}")
                 continue
             
-        except ValueError:
+        except ValueError: #handling if the user typed a string instead of a number for the date
             print("Please type a number")
         
         except:

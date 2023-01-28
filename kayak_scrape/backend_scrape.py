@@ -1,4 +1,3 @@
-import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -6,16 +5,15 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException, InvalidArgumentException, NoAlertPresentException, TimeoutException
+from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException
 import time
 import datetime
 
 options = webdriver.ChromeOptions()
 options.add_experimental_option('excludeSwitches', ['enable-logging'])
 driver = webdriver.Chrome(options=options)
-driver = webdriver.Chrome(options=options)
 def get_iata(departure,destination):
-    url = "https://www.ccra.com/airport-codes/"
+    url = "https://www.ccra.com/airport-codes/" #i used this url to scrape the airport iata code of the user-specified points of departure and return
     driver.get(url)
     main = WebDriverWait(driver,10)
     main.until(EC.presence_of_element_located((By.XPATH,"//input[@type='search']")))
@@ -73,7 +71,7 @@ def format_date(dept_month,dept_day,ret_month,ret_day):
     if dept_date_obj < now or ret_date_obj < now:
         return "Incorrect date was inputted"
     else:
-        if ret_date_obj < dept_date_obj:
+        if ret_date_obj < dept_date_obj: #checking if the user typed a return date that is before the departure date
             
             return "Return date cannot be before departure"
         else:
@@ -81,13 +79,15 @@ def format_date(dept_month,dept_day,ret_month,ret_day):
 
   
 def build_url(dept_iata_code,dest_iata_code,dept_date,ret_date):
-    url = f'https://www.ca.kayak.com/flights/{dept_iata_code}-{dest_iata_code}/{dept_date}/{ret_date}'
+    #building a valid kayak url that we will scrape from
+    url = f'https://www.ca.kayak.com/flights/{dept_iata_code}-{dest_iata_code}/{dept_date}/{ret_date}' 
     return url
     
 def scrape_data(url):
     driver.get(url)
     while True:
-        
+        #the Kayak site is dynamic,so I picked two common values of element's class for the program to handle if they ever appeared.
+        #not sure how to comment the remaining part of the cpde, because you'd need to study and inspect the structure of the site to understand
         time.sleep(20)
         try:
             advice_col = driver.find_element(By.CLASS_NAME,"col-advice")
